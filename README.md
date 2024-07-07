@@ -22,7 +22,7 @@ pip install -r requirements.txt
 ```
 
 ## 💼 Models
-We provide models trained on ImageNet1000 following the settings in orginal paper: [Qformer](), [CoSeR]().
+We provide models trained on ImageNet1000 following the settings in orginal paper: [Qformer](https://drive.google.com/file/d/1fNCeoHPLZXndupsWrdg7z_P2sHQ4W6Rr/view?usp=drive_link), [CoSeR](https://drive.google.com/file/d/1fNCeoHPLZXndupsWrdg7z_P2sHQ4W6Rr/view?usp=drive_link).
 
 ## 🌟 Quick inference
 Please download [Stable Diffusion 2.1](https://huggingface.co/stabilityai/stable-diffusion-2-1-base). and revise "PATH_FOR_QFORMER" and "PATH_FOR_SD" in configs/CoSeR/inference.yaml with the corresponding path. We also recommend to use the [controllable feature wrapping](https://download.openxlab.org.cn/repos/file/Iceclear/StableSR/main?filepath=vqgan_cfw_00011.ckpt&sign=6e43b120e1892145fb05c494e5151095&nonce=1720265685692) from StableSR for the complete performance. 🤗
