@@ -1,0 +1,144 @@
+sf: 4
+model:
+  base_learning_rate: 5.0e-05
+  target: ldm.models.diffusion.ddpm.LatentDiffusionCogSR
+  params:
+    # parameterization: "v"
+    linear_start: 0.00085
+    linear_end: 0.0120
+    num_timesteps_cond: 1
+    log_every_t: 200
+    timesteps: 1000
+    first_stage_key: image
+    cond_stage_key: caption
+    image_size: 512
+    channels: 4
+    cond_stage_trainable: False   # Note: different from the one we trained before
+    conditioning_key: crossattn
+    monitor: val/loss_simple_ema
+    scale_factor: 0.18215
+    use_ema: False
+    # for training only
+    ckpt_path: PATH_FOR_SD
+    unfrozen_diff: False
+    random_size: False
+    time_replace: 1000
+    use_usm: True
+    #P2 weighting, we do not use in final version
+    p2_gamma: ~
+    p2_k: ~
+    # use_fp16: True
+    # ignore_keys: []
+    drop_rate: 0.5
+    use_atten_init: true
+    fixed_cond: True
+
+    # Fill in the path of trained cognitive encoder weights here.
+    pretrained_presr_qformer_path: PATH_FOR_QFORMER
+
+    unet_config:
+      target: ldm.modules.diffusionmodules.openaimodel.UNetModelAiA
+      params:
+        image_size: 32 # unused
+        in_channels: 4
+        out_channels: 4
+        model_channels: 320
+        attention_resolutions: [ 4, 2, 1 ]
+        num_res_blocks: 2
+        channel_mult: [ 1, 2, 4, 4 ]
+        num_head_channels: 64
+        use_spatial_transformer: True
+        use_linear_in_transformer: True
+        transformer_depth: 1
+        context_dim: 1024
+        use_checkpoint: False
+        legacy: False
+        transformer_version: V8_refV5
+        merge_x2: False
+
+    first_stage_config:
+      target: ldm.models.autoencoder.AutoencoderKL
+      params:
+        # for training only
+        ckpt_path: PATH_FOR_SD
+        embed_dim: 4
+        monitor: val/rec_loss
+        ddconfig:
+          double_z: true
+          z_channels: 4
+          resolution: 512
+          in_channels: 3
+          out_ch: 3
+          ch: 128
+          ch_mult:
+          - 1
+          - 2
+          - 4
+          - 4
+          num_res_blocks: 2
+          attn_resolutions: []
+          dropout: 0.0
+        lossconfig:
+          target: torch.nn.Identity
+
+    cond_stage_config:
+      target: ldm.modules.encoders.modules.FrozenOpenCLIPImageTokenEmbedder
+      params:
+        freeze: True
+        layer: "penultimate"
+
+    pre_sr_config:
+      target: basicsr.archs.srresnet_arch.MSRResNet
+      params:
+        upscale: 4
+
+    cog_enc_config:
+      target: ldm.models.global_adapter.CogAdapter
+      params:
+        num_query_token: 50
+        vision_width: 1024
+        cross_attention_freq: 2
+        num_hidden_layers: 12
+
+    structcond_stage_config:
+      target: ldm.modules.diffusionmodules.openaimodel.ControlNet
+      params:
+        use_checkpoint: True
+        image_size: 32 # unused
+        in_channels: 4
+        hint_channels: 3 # not in use
+        model_channels: 320
+        attention_resolutions: [4, 3, 1]
+        num_res_blocks: 2
+        channel_mult: [1, 2, 4, 4]
+        num_head_channels: 64 # need to fix for flash-atten
+        use_spatial_transformer: True
+        use_linear_in_transformer: True
+        transformer_depth: 1
+        context_dim: 1024
+        legacy: False
+        # use_fp16: True
+
+
+degradation:
+  # the first degradation process
+  resize_prob: [0.2, 0.7, 0.1]  # up, down, keep
+  resize_range: [0.3, 1.5]
+  gaussian_noise_prob: 0.5
+  noise_range: [1, 15]
+  poisson_scale_range: [0.05, 2.0]
+  gray_noise_prob: 0.4
+  jpeg_range: [60, 95]
+
+  # the second degradation process
+  second_blur_prob: 0.5
+  resize_prob2: [0.3, 0.4, 0.3]  # up, down, keep
+  resize_range2: [0.6, 1.2]
+  gaussian_noise_prob2: 0.5
+  noise_range2: [1, 12]
+  poisson_scale_range2: [0.05, 1.0]
+  gray_noise_prob2: 0.4
+  jpeg_range2: [60, 100]
+
+  gt_size: 512
+  no_degradation_prob: 0.01
