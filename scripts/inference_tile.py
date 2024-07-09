@@ -253,7 +253,6 @@ def main():
 
 	# set inputdir and outputdir
 	os.makedirs(opt.outdir, exist_ok=True)
-	os.makedirs(str(opt.outdir).rstrip('/')+'_gen', exist_ok=True)
 
 	names_list = os.listdir(opt.inputdir)
 	temp_list = []
