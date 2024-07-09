@@ -148,13 +148,13 @@ def main():
 		"--cfg",
 		type=float,
 		default=3.0,
-		help="unclassification guidance rate",
+		help="cfg rate",
 	)
 	parser.add_argument(
 		"--cfg_ref",
 		type=float,
-		default=7.0,
-		help="unclassification guidance rate in reference generation",
+		default=3.0,
+		help="cfg rate in reference generation",
 	)
 	parser.add_argument(
 		"--neg_prompt",
