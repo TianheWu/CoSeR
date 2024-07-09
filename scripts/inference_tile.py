@@ -375,7 +375,7 @@ def main():
 
 						# save results
 						im_sr = im_spliter.gather()
-						im_sr = torch.clamp((x_samples + 1.0) / 2.0, min=0.0, max=1.0)
+						im_sr = torch.clamp((im_sr + 1.0) / 2.0, min=0.0, max=1.0)
 						# im_sr = im_sr.cpu().numpy().transpose(0,2,3,1)*255
 					else:
 						seed_everything(opt.seed)
@@ -413,7 +413,7 @@ def main():
 						im_sr = torch.clamp((x_samples + 1.0) / 2.0, min=0.0, max=1.0)
 					
 					if flag_pad:
-						im_sr = im_sr[:, :ori_h, :ori_w, ]
+						im_sr = im_sr[:, :, :ori_h, :ori_w, ]
 
 					if upsample_scale > opt.upscale:
 						im_sr = F.interpolate(
