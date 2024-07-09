@@ -76,3 +76,6 @@ python main.py --train --base configs/CoSeR/qformer_srresnet_imagenet_all.yaml -
 ```
 python main.py --train --base configs/CoSeR/aia_512_imagenet_all_caption_clip_atten_ref.yaml --gpus 0,1,2,3,4,5,6,7 --name your_name
 ```
+
+## 💙 Acknowledgments
+This project is based on [StableSR](https://github.com/IceClear/StableSR). Thanks for their awesome works.

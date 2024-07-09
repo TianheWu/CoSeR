@@ -356,8 +356,8 @@ def main():
 
 							# reference image generation
 							init_latent_zero = model.get_first_stage_encoding(model.encode_first_stage(torch.zeros(im_lq_pch.shape, device=im_lq_pch.device)).mode())
-							condition_dic = {'prompt_emb': semantic_user[0], 'lr_prompt_emb': cog_embed, 'lr': init_latent, 'reference': init_latent_zero}
-							condition_dic_ne = {'prompt_emb': None, 'lr_prompt_emb': semantic_neg[0], 'lr': init_latent, 'reference': init_latent_zero}
+							condition_dic = {'prompt_emb': semantic_user, 'lr_prompt_emb': cog_embed, 'lr': init_latent, 'reference': init_latent_zero}
+							condition_dic_ne = {'prompt_emb': None, 'lr_prompt_emb': semantic_neg, 'lr': init_latent, 'reference': init_latent_zero}
 
 							samples, _ = model.sample_tile(cond=condition_dic, cond_ne=condition_dic_ne, cfg=opt.cfg, batch_size=im_lq_bs.size(0), timesteps=opt.ddpm_steps, time_replace=opt.ddpm_steps, x_T=x_T, return_intermediates=True, tile_size=int(opt.input_size/8), tile_overlap=opt.tile_overlap, batch_size_sample=1)
 
@@ -395,8 +395,8 @@ def main():
 
 						# reference image generation
 						init_latent_zero = model.get_first_stage_encoding(model.encode_first_stage(torch.zeros(im_lq_bs.shape, device=im_lq_bs.device)).mode())
-						condition_dic = {'prompt_emb': semantic_user[0], 'lr_prompt_emb': cog_embed, 'lr': init_latent, 'reference': init_latent_zero}
-						condition_dic_ne = {'prompt_emb': None, 'lr_prompt_emb': semantic_neg[0], 'lr': init_latent, 'reference': init_latent_zero}
+						condition_dic = {'prompt_emb': semantic_user, 'lr_prompt_emb': cog_embed, 'lr': init_latent, 'reference': init_latent_zero}
+						condition_dic_ne = {'prompt_emb': None, 'lr_prompt_emb': semantic_neg, 'lr': init_latent, 'reference': init_latent_zero}
 
 						samples, _ = model.sample_tile(cond=condition_dic, cond_ne=condition_dic_ne, cfg=opt.cfg, batch_size=im_lq_bs.size(0), timesteps=opt.ddpm_steps, time_replace=opt.ddpm_steps, x_T=x_T, return_intermediates=True, tile_size=int(opt.input_size/8), tile_overlap=opt.tile_overlap, batch_size_sample=1)
 
